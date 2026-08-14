@@ -1,1 +1,2 @@
-{"north":"OPEN","south":"OPEN"}
+north = OPEN
+south = CLOSED
