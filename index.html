@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walk-Up Play Availability</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sd-blue:#0098db; --sd-blue-deep:#00549f; --sd-slate:#37424a;
+    --sd-ink:#1b242a; --sd-sand:#dad7cb; --sd-gray:#e0e1dd;
+    --sd-gold:#ffa02f; --open:#007b69; --closed:#b4232a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:transparent;}
+  body{font-family:'Open Sans','Segoe UI',system-ui,sans-serif;color:var(--sd-slate);padding:5px;-webkit-font-smoothing:antialiased;}
+  .tp-card{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--sd-sand);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px -14px rgba(27,36,42,.4);}
+  .tp-head{background:linear-gradient(90deg,var(--sd-blue-deep),var(--sd-blue));color:#fff;padding:11px 18px;display:flex;align-items:center;gap:12px;}
+  .tp-bar{width:4px;align-self:stretch;min-height:26px;background:var(--sd-gold);border-radius:2px;flex:none;}
+  .tp-txt{flex:1 1 auto;min-width:0;}
+  .tp-title{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;}
+  .tp-sub{font-size:11.5px;font-weight:600;margin-top:1px;color:rgba(255,255,255,.85);}
+  .tp-live{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(255,255,255,.14);padding:4px 9px;border-radius:999px;}
+  .tp-ping{width:6px;height:6px;border-radius:50%;background:#8ff0a4;animation:tp-pulse 1.8s ease-in-out infinite;}
+  @keyframes tp-pulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+  .tp-body{display:flex;}
+  .tp-cell{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;min-width:0;}
+  .tp-divide{width:1px;background:var(--sd-gray);}
+  .tp-name{font-size:15px;font-weight:700;color:var(--sd-ink);}
+  .tp-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 13px 6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;white-space:nowrap;background:var(--sd-slate);transition:background .3s ease;}
+  .tp-dot{width:8px;height:8px;border-radius:50%;background:#fff;flex:none;}
+  .tp-cell.tp-open .tp-pill{background:var(--open);}
+  .tp-cell.tp-closed .tp-pill{background:var(--closed);}
+  .tp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 18px;background:#f7f7f5;border-top:1px solid var(--sd-gray);font-size:11px;color:#6c757c;}
+  .tp-brand{font-weight:700;color:var(--sd-slate);letter-spacing:.02em;}
+  @media (max-width:430px){
+    .tp-body{flex-direction:column;}
+    .tp-divide{width:auto;height:1px;}
+  }
+  @media (prefers-reduced-motion:reduce){.tp-ping{animation:none;}}
+</style>
+</head>
+<body>
+  <div class="tp-card">
+    <div class="tp-head">
+      <span class="tp-bar"></span>
+      <div class="tp-txt">
+        <div class="tp-title">Walk-Up Play Availability</div>
+        <div class="tp-sub" id="tp-sub">Torrey Pines Golf Course</div>
+      </div>
+      <span class="tp-live"><span class="tp-ping"></span>Live</span>
+    </div>
+    <div class="tp-body">
+      <div class="tp-cell" id="cell-north">
+        <span class="tp-name">North Course</span>
+        <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking…</span></span>
+      </div>
+      <div class="tp-divide"></div>
+      <div class="tp-cell" id="cell-south">
+        <span class="tp-name">South Course</span>
+        <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking…</span></span>
+      </div>
+    </div>
+    <div class="tp-foot">
+      <span id="tp-updated">Updating…</span>
+      <span class="tp-brand">City of San Diego · Golf</span>
+    </div>
+  </div>
+
+<script>
+  var cells = { north: document.getElementById('cell-north'),
+                south: document.getElementById('cell-south') };
+
+  function paintDate(){
+    var d = new Date();
+    document.getElementById('tp-sub').textContent =
+      'Torrey Pines Golf Course · ' +
+      d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  }
+
+  function paintCourse(key, open){
+    var c = cells[key];
+    c.classList.toggle('tp-open', open);
+    c.classList.toggle('tp-closed', !open);
+    c.querySelector('[data-label]').textContent = open ? 'Open' : 'Closed';
+  }
+
+  function loadStatus(){
+    // cache-buster so we always get the latest committed status.json
+    fetch('status.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        paintCourse('north', String(data.north).toUpperCase() === 'OPEN');
+        paintCourse('south', String(data.south).toUpperCase() === 'OPEN');
+        var t = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+        document.getElementById('tp-updated').textContent = 'Updated ' + t;
+      })
+      .catch(function(){
+        document.getElementById('tp-updated').textContent = 'Status temporarily unavailable';
+      });
+  }
+
+  paintDate();
+  loadStatus();
+  setInterval(loadStatus, 45000);
+  setInterval(paintDate, 60000);
+</script>
+</body>
+</html>
