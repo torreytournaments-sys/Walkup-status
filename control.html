@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Walk-Up Status — Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sd-blue:#0098db; --sd-blue-deep:#00549f; --sd-slate:#37424a;
+    --sd-ink:#1b242a; --sd-sand:#dad7cb; --sd-gray:#e0e1dd;
+    --sd-gold:#ffa02f; --open:#007b69; --closed:#b4232a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Open Sans','Segoe UI',system-ui,sans-serif;color:var(--sd-slate);background:#eef1f3;padding:24px 16px;-webkit-font-smoothing:antialiased;}
+  .card{max-width:480px;margin:0 auto;background:#fff;border:1px solid var(--sd-sand);border-radius:12px;overflow:hidden;box-shadow:0 10px 26px -16px rgba(27,36,42,.5);}
+  .head{background:linear-gradient(90deg,var(--sd-blue-deep),var(--sd-blue));color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;}
+  .bar{width:4px;align-self:stretch;min-height:30px;background:var(--sd-gold);border-radius:2px;flex:none;}
+  .title{font-size:15px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;line-height:1.15;}
+  .subtitle{font-size:11.5px;font-weight:600;color:rgba(255,255,255,.85);margin-top:1px;}
+  .section{padding:16px 20px;border-top:1px solid var(--sd-gray);}
+  .section:first-of-type{border-top:none;}
+  .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#8a9299;margin-bottom:8px;}
+  /* token area */
+  .token-connected{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;}
+  .badge-ok{display:inline-flex;align-items:center;gap:7px;font-weight:700;color:var(--open);}
+  .badge-ok .d{width:9px;height:9px;border-radius:50%;background:var(--open);}
+  .linkbtn{background:none;border:none;color:var(--sd-blue-deep);font-family:inherit;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0;}
+  .token-input{width:100%;font-family:'Consolas',monospace;font-size:13px;padding:10px 12px;border:1px solid var(--sd-gray);border-radius:8px;margin-bottom:10px;}
+  .hint{font-size:12px;color:#6c757c;margin-top:8px;line-height:1.5;}
+  .hint a{color:var(--sd-blue-deep);font-weight:700;}
+  /* course rows */
+  .course{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;}
+  .course + .course{border-top:1px solid var(--sd-gray);}
+  .cname{font-size:16px;font-weight:700;color:var(--sd-ink);}
+  .seg{display:inline-flex;background:#eef0f1;border-radius:999px;padding:4px;gap:2px;}
+  .seg button{font-family:inherit;font-size:12.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border:none;background:none;color:#8a9299;padding:8px 16px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s;}
+  .seg button.on-open{background:var(--open);color:#fff;}
+  .seg button.on-closed{background:var(--closed);color:#fff;}
+  /* save */
+  .saverow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .save{font-family:inherit;font-size:15px;font-weight:800;letter-spacing:.02em;color:#fff;background:var(--sd-blue);border:none;border-bottom:4px solid var(--sd-gold);padding:13px 26px;border-radius:10px;cursor:pointer;}
+  .save:disabled{opacity:.5;cursor:not-allowed;}
+  .msg{font-size:13px;font-weight:600;color:#6c757c;}
+  .msg.ok{color:var(--open);}
+  .msg.err{color:var(--closed);}
+  .foot{padding:11px 20px;background:#f7f7f5;border-top:1px solid var(--sd-gray);font-size:11px;color:#6c757c;text-align:center;}
+  .hide{display:none;}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <span class="bar"></span>
+      <div>
+        <div class="title">Walk-Up Status &mdash; Control</div>
+        <div class="subtitle">Torrey Pines Golf Course</div>
+      </div>
+    </div>
+
+    <!-- Token section -->
+    <div class="section">
+      <div class="label">Access</div>
+      <div id="token-connected" class="token-connected hide">
+        <span class="badge-ok"><span class="d"></span>Connected</span>
+        <button class="linkbtn" id="btn-forget">Change key</button>
+      </div>
+      <div id="token-entry">
+        <input id="token-input" class="token-input" type="password" placeholder="Paste your GitHub key here" autocomplete="off">
+        <button class="save" id="btn-connect" style="font-size:14px;padding:11px 22px;">Connect</button>
+        <div class="hint">One-time setup. Your key is stored only in this browser, never shared. <a id="lnk-create" href="#" target="_blank" rel="noopener">Create a key &rarr;</a></div>
+      </div>
+    </div>
+
+    <!-- Courses -->
+    <div class="section">
+      <div class="label">Set availability</div>
+      <div class="course">
+        <span class="cname">North Course</span>
+        <span class="seg" data-course="north">
+          <button data-val="OPEN">Open</button>
+          <button data-val="CLOSED">Closed</button>
+        </span>
+      </div>
+      <div class="course">
+        <span class="cname">South Course</span>
+        <span class="seg" data-course="south">
+          <button data-val="OPEN">Open</button>
+          <button data-val="CLOSED">Closed</button>
+        </span>
+      </div>
+    </div>
+
+    <!-- Save -->
+    <div class="section">
+      <div class="saverow">
+        <button class="save" id="btn-save" disabled>Save changes</button>
+        <span class="msg" id="msg">Loading current status&hellip;</span>
+      </div>
+    </div>
+
+    <div class="foot">City of San Diego &middot; Golf &mdash; changes go live within about a minute</div>
+  </div>
+
+<script>
+(function(){
+  var CONFIG = {
+    owner:  'torreytournaments-sys',
+    repo:   'Walkup-status',
+    path:   'status.json',
+    branch: 'main'
+  };
+  var TOKEN_KEY = 'tp-gh-token';
+
+  var state = { north:'OPEN', south:'OPEN' };
+  var fileSha = null;
+  var token = null;
+  try { token = localStorage.getItem(TOKEN_KEY); } catch(e){}
+
+  var el = {
+    connected: document.getElementById('token-connected'),
+    entry:     document.getElementById('token-entry'),
+    input:     document.getElementById('token-input'),
+    connect:   document.getElementById('btn-connect'),
+    forget:    document.getElementById('btn-forget'),
+    save:      document.getElementById('btn-save'),
+    msg:       document.getElementById('msg'),
+    create:    document.getElementById('lnk-create')
+  };
+
+  el.create.href = 'https://github.com/settings/personal-access-tokens/new';
+
+  function setMsg(text, kind){
+    el.msg.textContent = text;
+    el.msg.className = 'msg' + (kind ? ' ' + kind : '');
+  }
+
+  function apiHeaders(){
+    return { 'Authorization':'Bearer ' + token,
+             'Accept':'application/vnd.github+json',
+             'X-GitHub-Api-Version':'2022-11-28' };
+  }
+  function contentsUrl(){
+    return 'https://api.github.com/repos/' + CONFIG.owner + '/' + CONFIG.repo +
+           '/contents/' + CONFIG.path;
+  }
+
+  function paintToggles(){
+    document.querySelectorAll('.seg').forEach(function(seg){
+      var course = seg.getAttribute('data-course');
+      seg.querySelectorAll('button').forEach(function(b){
+        var v = b.getAttribute('data-val');
+        b.classList.remove('on-open','on-closed');
+        if(state[course] === v){
+          b.classList.add(v === 'OPEN' ? 'on-open' : 'on-closed');
+        }
+      });
+    });
+  }
+
+  function parseStatus(text){
+    var out = {};
+    text.split(/\r?\n/).forEach(function(line){
+      var i = line.indexOf('=');
+      if(i > -1){
+        var k = line.slice(0,i).trim().toLowerCase();
+        var v = line.slice(i+1).trim().toUpperCase();
+        if(k) out[k] = v;
+      }
+    });
+    if(out.north === undefined && out.south === undefined){
+      try { var j = JSON.parse(text);
+        if(j.north!==undefined) out.north = String(j.north).toUpperCase();
+        if(j.south!==undefined) out.south = String(j.south).toUpperCase();
+      } catch(e){}
+    }
+    return out;
+  }
+
+  function showConnected(yes){
+    el.connected.classList.toggle('hide', !yes);
+    el.entry.classList.toggle('hide', yes);
+  }
+
+  function loadCurrent(){
+    if(!token){ showConnected(false); setMsg('Connect your key to begin.'); return; }
+    showConnected(true);
+    setMsg('Loading current status\u2026');
+    fetch(contentsUrl() + '?ref=' + CONFIG.branch + '&t=' + Date.now(),
+          { headers: apiHeaders(), cache:'no-store' })
+      .then(function(r){
+        if(r.status === 401){ throw new Error('bad-token'); }
+        if(!r.ok){ throw new Error('http-' + r.status); }
+        return r.json();
+      })
+      .then(function(data){
+        fileSha = data.sha;
+        var text = decodeURIComponent(escape(atob((data.content||'').replace(/\n/g,''))));
+        var s = parseStatus(text);
+        if(s.north === 'OPEN' || s.north === 'CLOSED') state.north = s.north;
+        if(s.south === 'OPEN' || s.south === 'CLOSED') state.south = s.south;
+        paintToggles();
+        el.save.disabled = false;
+        setMsg('Ready. Current status loaded.', 'ok');
+      })
+      .catch(function(err){
+        el.save.disabled = true;
+        if(err.message === 'bad-token'){
+          setMsg('That key was rejected. Check it and reconnect.', 'err');
+          showConnected(false);
+        } else {
+          setMsg('Could not load status (' + err.message + ').', 'err');
+        }
+      });
+  }
+
+  function save(){
+    if(!token){ setMsg('Connect your key first.', 'err'); return; }
+    el.save.disabled = true;
+    setMsg('Saving\u2026');
+    var body = 'north = ' + state.north + '\nsouth = ' + state.south + '\n';
+    var b64 = btoa(unescape(encodeURIComponent(body)));
+    fetch(contentsUrl(), {
+      method:'PUT',
+      headers: apiHeaders(),
+      body: JSON.stringify({
+        message: 'Update walk-up status',
+        content: b64,
+        sha: fileSha,
+        branch: CONFIG.branch
+      })
+    })
+    .then(function(r){
+      if(r.status === 401){ throw new Error('bad-token'); }
+      if(r.status === 409){ throw new Error('conflict'); }
+      if(!r.ok){ throw new Error('http-' + r.status); }
+      return r.json();
+    })
+    .then(function(data){
+      fileSha = data.content.sha;
+      el.save.disabled = false;
+      var t = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+      setMsg('Saved at ' + t + '. Public page updates within a minute.', 'ok');
+    })
+    .catch(function(err){
+      el.save.disabled = false;
+      if(err.message === 'conflict'){
+        setMsg('The file changed elsewhere. Reloading\u2026', 'err');
+        loadCurrent();
+      } else if(err.message === 'bad-token'){
+        setMsg('Key rejected. Reconnect your key.', 'err');
+        showConnected(false);
+      } else {
+        setMsg('Save failed (' + err.message + '). Try again.', 'err');
+      }
+    });
+  }
+
+  // wire toggles
+  document.querySelectorAll('.seg button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var course = b.parentNode.getAttribute('data-course');
+      state[course] = b.getAttribute('data-val');
+      paintToggles();
+    });
+  });
+
+  el.connect.addEventListener('click', function(){
+    var v = el.input.value.trim();
+    if(!v){ setMsg('Paste your key first.', 'err'); return; }
+    token = v;
+    try { localStorage.setItem(TOKEN_KEY, token); } catch(e){}
+    el.input.value = '';
+    loadCurrent();
+  });
+
+  el.forget.addEventListener('click', function(){
+    token = null;
+    try { localStorage.removeItem(TOKEN_KEY); } catch(e){}
+    el.save.disabled = true;
+    showConnected(false);
+    setMsg('Key removed. Connect again to make changes.');
+  });
+
+  el.save.addEventListener('click', save);
+
+  paintToggles();
+  loadCurrent();
+})();
+</script>
+</body>
+</html>
