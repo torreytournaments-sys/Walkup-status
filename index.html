@@ -13,7 +13,7 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{background:transparent;}
-  body{font-family:'Open Sans','Segoe UI',system-ui,sans-serif;color:var(--sd-slate);padding:5px;-webkit-font-smoothing:antialiased;}
+  body{font-family:'Open Sans','Segoe UI',system-ui,sans-serif;color:var(--sd-slate);padding:16px;-webkit-font-smoothing:antialiased;}
   .tp-card{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--sd-sand);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px -14px rgba(27,36,42,.4);}
   .tp-head{background:linear-gradient(90deg,var(--sd-blue-deep),var(--sd-blue));color:#fff;padding:11px 18px;display:flex;align-items:center;gap:12px;}
   .tp-bar{width:4px;align-self:stretch;min-height:26px;background:var(--sd-gold);border-radius:2px;flex:none;}
@@ -53,17 +53,17 @@
     <div class="tp-body">
       <div class="tp-cell" id="cell-north">
         <span class="tp-name">North Course</span>
-        <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking…</span></span>
+        <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking&hellip;</span></span>
       </div>
       <div class="tp-divide"></div>
       <div class="tp-cell" id="cell-south">
         <span class="tp-name">South Course</span>
-        <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking…</span></span>
+        <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking&hellip;</span></span>
       </div>
     </div>
     <div class="tp-foot">
-      <span id="tp-updated">Updating…</span>
-      <span class="tp-brand">City of San Diego · Golf</span>
+      <span id="tp-updated">Updating&hellip;</span>
+      <span class="tp-brand">City of San Diego &middot; Golf</span>
     </div>
   </div>
 
@@ -74,7 +74,7 @@
   function paintDate(){
     var d = new Date();
     document.getElementById('tp-sub').textContent =
-      'Torrey Pines Golf Course · ' +
+      'Torrey Pines Golf Course \u00b7 ' +
       d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
   }
 
@@ -85,13 +85,32 @@
     c.querySelector('[data-label]').textContent = open ? 'Open' : 'Closed';
   }
 
+  function parseStatus(text){
+    var out = {};
+    text.split(/\r?\n/).forEach(function(line){
+      var i = line.indexOf('=');
+      if(i > -1){
+        var key = line.slice(0, i).trim().toLowerCase();
+        var val = line.slice(i + 1).trim().toUpperCase();
+        if(key) out[key] = val;
+      }
+    });
+    if(out.north === undefined && out.south === undefined){
+      try { var j = JSON.parse(text);
+        if(j.north!==undefined) out.north = String(j.north).toUpperCase();
+        if(j.south!==undefined) out.south = String(j.south).toUpperCase();
+      } catch(e){}
+    }
+    return out;
+  }
+
   function loadStatus(){
-    // cache-buster so we always get the latest committed status.json
-    fetch('status.json?t=' + Date.now(), { cache: 'no-store' })
-      .then(function(r){ return r.json(); })
-      .then(function(data){
-        paintCourse('north', String(data.north).toUpperCase() === 'OPEN');
-        paintCourse('south', String(data.south).toUpperCase() === 'OPEN');
+    fetch('status.json?t=' + Date.now(), { cache:'no-store' })
+      .then(function(r){ return r.text(); })
+      .then(function(text){
+        var s = parseStatus(text);
+        paintCourse('north', s.north === 'OPEN');
+        paintCourse('south', s.south === 'OPEN');
         var t = new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
         document.getElementById('tp-updated').textContent = 'Updated ' + t;
       })
