@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Walk-Up Play Availability</title>
+<title>Walk-Up Play Availability — Torrey Pines Golf Course</title>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -12,26 +12,47 @@
     --sd-gold:#ffa02f; --open:#007b69; --closed:#b4232a;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
-  html,body{background:transparent;}
-  body{font-family:'Open Sans','Segoe UI',system-ui,sans-serif;color:var(--sd-slate);padding:16px;-webkit-font-smoothing:antialiased;}
-  .tp-card{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--sd-sand);border-radius:12px;overflow:hidden;box-shadow:0 6px 18px -14px rgba(27,36,42,.4);}
-  .tp-head{background:linear-gradient(90deg,var(--sd-blue-deep),var(--sd-blue));color:#fff;padding:11px 18px;display:flex;align-items:center;gap:12px;}
-  .tp-bar{width:4px;align-self:stretch;min-height:26px;background:var(--sd-gold);border-radius:2px;flex:none;}
+  html,body{height:100%;}
+  body{
+    font-family:'Open Sans','Segoe UI',system-ui,sans-serif;
+    color:var(--sd-slate);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    -webkit-font-smoothing:antialiased;
+    /* Layers, top to bottom: dark overlay -> your photo -> fallback gradient */
+    background:
+      linear-gradient(180deg, rgba(7,42,66,.30) 0%, rgba(7,42,66,.42) 42%, rgba(7,42,66,.70) 100%),
+      url('TP_SLIDE_SHOW_GOLF_SHOP.png') center 38% / cover no-repeat,
+      linear-gradient(180deg, #12507A 0%, #0B3C5D 55%, #072A42 100%);
+  }
+  /* push the card into the calmer lower third so it floats over the grass, not the bright horizon */
+  body{align-items:flex-end;}
+  .tp-wrap{width:100%;display:flex;justify-content:center;padding-bottom:6vh;}
+  .tp-card{
+    width:100%;max-width:600px;background:#fff;
+    border:1px solid rgba(255,255,255,.5);border-radius:14px;overflow:hidden;
+    box-shadow:0 26px 60px -18px rgba(0,0,0,.70), 0 0 0 6px rgba(255,255,255,.10);
+  }
+  .tp-head{background:linear-gradient(90deg,var(--sd-blue-deep),var(--sd-blue));color:#fff;padding:13px 20px;display:flex;align-items:center;gap:12px;}
+  .tp-bar{width:4px;align-self:stretch;min-height:30px;background:var(--sd-gold);border-radius:2px;flex:none;}
   .tp-txt{flex:1 1 auto;min-width:0;}
-  .tp-title{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;}
-  .tp-sub{font-size:11.5px;font-weight:600;margin-top:1px;color:rgba(255,255,255,.85);}
-  .tp-live{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(255,255,255,.14);padding:4px 9px;border-radius:999px;}
+  .tp-title{font-size:14.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;}
+  .tp-sub{font-size:11.5px;font-weight:600;margin-top:2px;color:rgba(255,255,255,.85);}
+  .tp-live{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:4px 9px;border-radius:999px;}
   .tp-ping{width:6px;height:6px;border-radius:50%;background:#8ff0a4;animation:tp-pulse 1.8s ease-in-out infinite;}
   @keyframes tp-pulse{0%,100%{opacity:.35;}50%{opacity:1;}}
   .tp-body{display:flex;}
-  .tp-cell{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 18px;min-width:0;}
+  .tp-cell{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 18px;min-width:0;}
   .tp-divide{width:1px;background:var(--sd-gray);}
   .tp-name{font-size:15px;font-weight:700;color:var(--sd-ink);}
   .tp-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 13px 6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;white-space:nowrap;background:var(--sd-slate);transition:background .3s ease;}
   .tp-dot{width:8px;height:8px;border-radius:50%;background:#fff;flex:none;}
   .tp-cell.tp-open .tp-pill{background:var(--open);}
   .tp-cell.tp-closed .tp-pill{background:var(--closed);}
-  .tp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 18px;background:#f7f7f5;border-top:1px solid var(--sd-gray);font-size:11px;color:#6c757c;}
+  .tp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px;background:#f7f7f5;border-top:1px solid var(--sd-gray);font-size:11px;color:#6c757c;}
   .tp-brand{font-weight:700;color:var(--sd-slate);letter-spacing:.02em;}
   @media (max-width:430px){
     .tp-body{flex-direction:column;}
@@ -41,6 +62,7 @@
 </style>
 </head>
 <body>
+  <div class="tp-wrap">
   <div class="tp-card">
     <div class="tp-head">
       <span class="tp-bar"></span>
@@ -66,6 +88,7 @@
       <span class="tp-brand">City of San Diego &middot; Golf</span>
     </div>
   </div>
+  </div>
 
 <script>
   var cells = { north: document.getElementById('cell-north'),
@@ -77,14 +100,12 @@
       'Torrey Pines Golf Course \u00b7 ' +
       d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
   }
-
   function paintCourse(key, open){
     var c = cells[key];
     c.classList.toggle('tp-open', open);
     c.classList.toggle('tp-closed', !open);
     c.querySelector('[data-label]').textContent = open ? 'Open' : 'Closed';
   }
-
   function parseStatus(text){
     var out = {};
     text.split(/\r?\n/).forEach(function(line){
@@ -103,7 +124,6 @@
     }
     return out;
   }
-
   function loadStatus(){
     fetch('status.json?t=' + Date.now(), { cache:'no-store' })
       .then(function(r){ return r.text(); })
