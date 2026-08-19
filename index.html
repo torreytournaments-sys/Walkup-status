@@ -7,9 +7,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --sd-blue:#0098db; --sd-blue-deep:#00549f; --sd-slate:#37424a;
-    --sd-ink:#1b242a; --sd-sand:#dad7cb; --sd-gray:#e0e1dd;
+    --sd-blue:#0098db; --sd-blue-deep:#00549f;
+    --hdr-a:#00437f; --hdr-b:#006699;          /* AA-compliant header gradient */
+    --sd-slate:#37424a; --sd-ink:#1b242a;
+    --sd-sand:#dad7cb; --sd-gray:#e0e1dd;
     --sd-gold:#ffa02f; --open:#007b69; --closed:#b4232a;
+    --foot:#5f686f;                             /* AA-compliant footer text */
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html,body{height:100%;}
@@ -23,7 +26,7 @@
     padding:24px;
     -webkit-font-smoothing:antialiased;
     background:
-      linear-gradient(180deg, rgba(7,42,66,.30) 0%, rgba(7,42,66,.42) 42%, rgba(7,42,66,.70) 100%),
+      linear-gradient(180deg, rgba(7,42,66,.34) 0%, rgba(7,42,66,.46) 42%, rgba(7,42,66,.72) 100%),
       url('course.png') center 38% / cover no-repeat,
       linear-gradient(180deg, #12507A 0%, #0B3C5D 55%, #072A42 100%);
   }
@@ -32,40 +35,44 @@
   .tp-card{
     width:100%;max-width:600px;background:#fff;
     border:1px solid rgba(255,255,255,.5);border-radius:14px;overflow:hidden;
-    box-shadow:0 26px 60px -18px rgba(0,0,0,.70), 0 0 0 6px rgba(255,255,255,.10);
+    box-shadow:0 26px 60px -18px rgba(0,0,0,.70), 0 0 0 6px rgba(255,255,255,.12);
   }
-  .tp-head{background:linear-gradient(90deg,var(--sd-blue-deep),var(--sd-blue));color:#fff;padding:13px 20px;display:flex;align-items:center;gap:12px;}
+  .tp-head{background:linear-gradient(90deg,var(--hdr-a),var(--hdr-b));color:#fff;padding:13px 20px;display:flex;align-items:center;gap:12px;}
   .tp-bar{width:4px;align-self:stretch;min-height:30px;background:var(--sd-gold);border-radius:2px;flex:none;}
   .tp-txt{flex:1 1 auto;min-width:0;}
-  .tp-title{font-size:14.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;}
-  .tp-sub{font-size:11.5px;font-weight:600;margin-top:2px;color:rgba(255,255,255,.85);}
-  .tp-live{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.9);background:rgba(255,255,255,.15);padding:4px 9px;border-radius:999px;}
-  .tp-ping{width:6px;height:6px;border-radius:50%;background:#8ff0a4;animation:tp-pulse 1.8s ease-in-out infinite;}
-  @keyframes tp-pulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+  .tp-title{font-size:14.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;line-height:1.1;color:#fff;}
+  .tp-sub{font-size:12px;font-weight:600;margin-top:2px;color:#fff;}
+  .tp-live{display:inline-flex;align-items:center;gap:6px;flex:none;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.28);padding:4px 10px;border-radius:999px;}
+  .tp-ping{width:7px;height:7px;border-radius:50%;background:#8ff0a4;animation:tp-pulse 1.8s ease-in-out infinite;}
+  @keyframes tp-pulse{0%,100%{opacity:.4;}50%{opacity:1;}}
   .tp-body{display:flex;}
   .tp-cell{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 18px;min-width:0;}
   .tp-divide{width:1px;background:var(--sd-gray);}
   .tp-name{font-size:15px;font-weight:700;color:var(--sd-ink);}
   .tp-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 13px 6px 11px;border-radius:999px;font-size:12.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#fff;white-space:nowrap;background:var(--sd-slate);transition:background .3s ease;}
-  .tp-dot{width:8px;height:8px;border-radius:50%;background:#fff;flex:none;}
+  .tp-mark{font-size:12px;line-height:1;flex:none;}
   .tp-cell.tp-open .tp-pill{background:var(--open);}
   .tp-cell.tp-closed .tp-pill{background:var(--closed);}
-  .tp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px;background:#f7f7f5;border-top:1px solid var(--sd-gray);font-size:11px;color:#6c757c;}
+  .tp-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 18px;background:#f7f7f5;border-top:1px solid var(--sd-gray);font-size:11.5px;color:var(--foot);}
   .tp-brand{font-weight:700;color:var(--sd-slate);letter-spacing:.02em;}
 
   /* waitlist call-to-action */
   .tp-btn{display:inline-flex;align-items:center;gap:10px;margin-top:16px;text-decoration:none;
-    font-size:15px;font-weight:800;letter-spacing:.02em;color:#fff;background:var(--sd-blue);
+    font-size:15px;font-weight:800;letter-spacing:.02em;color:#fff;background:var(--sd-blue-deep);
     border-bottom:4px solid var(--sd-gold);padding:12px 22px;border-radius:999px;
     box-shadow:0 14px 30px -16px rgba(0,0,0,.7);transition:background .3s ease,filter .2s ease;}
-  .tp-btn:hover{filter:brightness(1.06);}
+  .tp-btn:hover{filter:brightness(1.08);}
+  .tp-btn:focus-visible{outline:3px solid #fff;outline-offset:3px;}
   .tp-btn.closed{background:var(--sd-slate);border-bottom-color:#8a9299;}
   .tp-ball{width:20px;height:20px;border-radius:50%;flex:none;position:relative;
     background:radial-gradient(circle at 35% 30%, #fff 0%, #eef0f2 55%, #d9dce0 100%);
     box-shadow:inset -2px -2px 3px rgba(0,0,0,.18), inset 2px 2px 3px rgba(255,255,255,.6), 0 1px 2px rgba(0,0,0,.35);}
   .tp-ball::after{content:"";position:absolute;inset:2px;border-radius:50%;
     background-image:radial-gradient(rgba(0,0,0,.14) .8px, transparent 1px);background-size:5px 5px;opacity:.7;}
-  .tp-cta-note{text-align:center;color:#fff;font-size:12.5px;font-weight:600;margin-top:9px;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+  .tp-cta-note{display:inline-block;text-align:center;color:#fff;font-size:12.5px;font-weight:600;margin-top:10px;
+    background:rgba(7,28,44,.62);padding:6px 12px;border-radius:8px;}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0;}
 
   @media (max-width:430px){
     .tp-body{flex-direction:column;}
@@ -76,40 +83,43 @@
 </style>
 </head>
 <body>
-  <div class="tp-wrap">
-    <div class="tp-card">
+  <main class="tp-wrap">
+    <section class="tp-card" aria-labelledby="tp-title">
       <div class="tp-head">
-        <span class="tp-bar"></span>
+        <span class="tp-bar" aria-hidden="true"></span>
         <div class="tp-txt">
-          <div class="tp-title">Walk-Up Play Availability</div>
-          <div class="tp-sub" id="tp-sub">Torrey Pines Golf Course</div>
+          <h1 class="tp-title" id="tp-title">Walk-Up Play Availability</h1>
+          <p class="tp-sub" id="tp-sub">Torrey Pines Golf Course</p>
         </div>
-        <span class="tp-live"><span class="tp-ping"></span>Live</span>
+        <span class="tp-live"><span class="tp-ping" aria-hidden="true"></span>Live</span>
       </div>
-      <div class="tp-body">
+
+      <div class="tp-body" id="tp-status" aria-live="polite">
         <div class="tp-cell" id="cell-north">
           <span class="tp-name">North Course</span>
-          <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking&hellip;</span></span>
+          <span class="tp-pill"><span class="tp-mark" aria-hidden="true"></span><span data-label>Checking&hellip;</span></span>
         </div>
-        <div class="tp-divide"></div>
+        <div class="tp-divide" aria-hidden="true"></div>
         <div class="tp-cell" id="cell-south">
           <span class="tp-name">South Course</span>
-          <span class="tp-pill"><span class="tp-dot"></span><span data-label>Checking&hellip;</span></span>
+          <span class="tp-pill"><span class="tp-mark" aria-hidden="true"></span><span data-label>Checking&hellip;</span></span>
         </div>
       </div>
+
       <div class="tp-foot">
         <span id="tp-updated">Updating&hellip;</span>
         <span class="tp-brand">City of San Diego &middot; Golf</span>
       </div>
-    </div>
+    </section>
 
     <a class="tp-btn" id="tp-cta-btn" href="https://waitwhile.com/locations/torreypinesgolf/welcome" target="_blank" rel="noopener">
-      <span class="tp-ball"></span>
+      <span class="tp-ball" aria-hidden="true"></span>
       <span id="tp-cta-label">Join the Daily Waitlist</span>
-      <span style="font-weight:700;">&rarr;</span>
+      <span aria-hidden="true" style="font-weight:700;">&rarr;</span>
+      <span class="sr-only">(opens in a new tab)</span>
     </a>
-    <div class="tp-cta-note" id="tp-cta-note">Add your name to today&rsquo;s walk-up waitlist &middot; opens in a new tab</div>
-  </div>
+    <p class="tp-cta-note" id="tp-cta-note">Add your name to today&rsquo;s walk-up waitlist</p>
+  </main>
 
 <script>
   var cells = { north: document.getElementById('cell-north'),
@@ -126,6 +136,7 @@
     c.classList.toggle('tp-open', open);
     c.classList.toggle('tp-closed', !open);
     c.querySelector('[data-label]').textContent = open ? 'Open' : 'Closed';
+    c.querySelector('.tp-mark').textContent = open ? '\u2713' : '\u2715'; // check / cross, non-color cue
   }
   function updateCTA(anyOpen){
     var btn   = document.getElementById('tp-cta-btn');
@@ -134,11 +145,11 @@
     if(anyOpen){
       btn.classList.remove('closed');
       label.textContent = 'Join the Daily Waitlist';
-      note.textContent  = 'Add your name to today\u2019s walk-up waitlist \u00b7 opens in a new tab';
+      note.textContent  = 'Add your name to today\u2019s walk-up waitlist';
     } else {
       btn.classList.add('closed');
       label.textContent = 'Both Courses Closed \u2014 Join Waitlist';
-      note.textContent  = 'No walk-up play right now \u00b7 opens in a new tab';
+      note.textContent  = 'No walk-up play right now';
     }
   }
   function parseStatus(text){
